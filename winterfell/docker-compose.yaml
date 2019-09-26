@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  nzbget:
+    image: linuxserver/nzbget
+    container_name: nzbget
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - $PWD/nzbget/config:/config
+      - $PWD/nzbget/downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 6789:6789
+    restart: unless-stopped
+
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker$PWD/plex
+      - /etc/localtime:/etc/localtime:ro
+    volumes:
+      - $PWD/plex/config:/config
+      - $PWD/plex/tvseries:/data/tvshows
+      - $PWD/plex/movies:/data/movies
+      - $PWD/plex/transcode:/transcode
+    restart: unless-stopped
+
+networks:
+  vpn-network:
+    external: true
