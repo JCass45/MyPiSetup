@@ -34,7 +34,7 @@ fi
 
 if [ ! -x $(command -v docker-compose) ]; then
     echo "Installing Docker-Compose"
-    sudo pip install docker-compose > /dev/null
+    sudo pip install docker-compose==1.23.2 > /dev/null
 else
     echo "Docker-Compose already installed"
 fi
