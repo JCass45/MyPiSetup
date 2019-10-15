@@ -8,8 +8,8 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - $HOME/nzbget/config:/config
-      - $HOME/nzbget/downloads:/downloads
+      - $HOME/storage/nzbget/config:/config
+      - $HOME/storage/nzbget/downloads:/downloads
       - /etc/localtime:/etc/localtime:ro
     ports:
       - 6789:6789
@@ -22,13 +22,13 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - VERSION=docker$HOME/plex
+      - VERSION=docker
       - /etc/localtime:/etc/localtime:ro
     volumes:
-      - $HOME/plex/config:/config
-      - $HOME/plex/tvseries:/data/tvshows
-      - $HOME/plex/movies:/data/movies
-      - $HOME/plex/transcode:/transcode
+      - $HOME/storage/plex/config:/config
+      - $HOME/storage/plex/tvshows:/tvshows
+      - $HOME/storage/plex/movies:/movies
+      - $HOME/storage/plex/transcode:/transcode
     restart: unless-stopped
 
 networks:
