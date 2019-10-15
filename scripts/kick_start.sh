@@ -9,27 +9,32 @@ error() {
 trap 'error $LINENO' ERR
 
 echo "Updating & upgrading packages..."
-sudo apt-get update
-sudo apt-get -y upgrade
+sudo apt-get update > /dev/null
+sudo apt-get -y upgrade > /dev/null
 
-echo "Installing Docker..."
-curl -sSL https://get.docker.com | sh
-
-echo "Creating docker group for sudo-less Docker use"
-sudo groupadd docker
-sudo usermod -aG docker $USER
-newgrp docker
-
-# Enable Docker on startup
-sudo systemctl enable docker
-
-if [ -x $(command -v python) ]; then
-    echo "Installing Python"
-    sudo apt-get -y install python python-pip
+if [ ! -x $(command -v docker) ]; then
+    echo "Installing Docker..."
+    curl -sSL https://get.docker.com | sh
+    echo "Creating docker group for sudo-less Docker use"
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    newgrp docker
+    # Enable Docker on startup
+    sudo systemctl enable docker
+else
+    echo "Docker already installed"
 fi
 
-echo "Installing Docker-Compose"
-sudo pip install docker-compose
+if [ ! -x $(command -v python) ] || [ ! -x $(command -v pip) ]; then
+    echo "Installing Python and pip"
+    sudo apt-get -y install python python-pip > /dev/null
+else
+    echo "Python and pip already installed"
+fi
 
-echo "Building Docker Images"
-docker-compose build
+if [ ! -x $(command -v docker-compose) ]; then
+    echo "Installing Docker-Compose"
+    sudo pip install docker-compose > /dev/null
+else
+    echo "Docker-Compose already installed"
+fi
