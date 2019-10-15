@@ -12,7 +12,7 @@ echo "Updating & upgrading packages..."
 sudo apt-get update > /dev/null
 sudo apt-get -y upgrade > /dev/null
 
-if [ ! -x $(command -v docker) ]; then
+if [ ! $(command -v docker) ]; then
     echo "Installing Docker..."
     curl -sSL https://get.docker.com | sh
     echo "Creating docker group for sudo-less Docker use"
@@ -25,14 +25,14 @@ else
     echo "Docker already installed"
 fi
 
-if [ ! -x $(command -v python) ] || [ ! -x $(command -v pip) ]; then
+if [ ! $(command -v python) ] || [ ! -x $(command -v pip) ]; then
     echo "Installing Python and pip"
     sudo apt-get -y install python python-pip > /dev/null
 else
     echo "Python and pip already installed"
 fi
 
-if [ ! -x $(command -v docker-compose) ]; then
+if [ ! $(command -v docker-compose) ]; then
     echo "Installing Docker-Compose"
     sudo pip install docker-compose==1.23.2 > /dev/null
 else
