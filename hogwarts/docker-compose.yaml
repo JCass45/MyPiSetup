@@ -6,11 +6,8 @@ services:
     image: mjenz/rpi-openvpn
     ports:
       - "1194:1194/udp"
-    networks:
-      vpn-network:
-        ipv4_address: 172.16.68.61
     volumes:
-      - $PWD/openvpn/:/etc/openvpn/
+      - $HOME/openvpn/:/etc/openvpn/
       - /etc/localtime:/etc/localtime:ro
     cap_add:
       - NET_ADMIN
@@ -25,14 +22,11 @@ services:
       - "67:67/udp"
       - "80:80/tcp"
       - "443:443/tcp"
-    networks:
-      vpn-network:
-        ipv4_address: 172.16.68.62
     environment:
       WEBPASSWORD: 'REDACTED'
     volumes:
-       - $PWD/pihole/:/etc/pihole/
-       - $PWD/pihole/dnsmasq.d/:/etc/dnsmasq.d/
+       - $HOME/pihole/:/etc/pihole/
+       - $HOME/pihole/dnsmasq.d/:/etc/dnsmasq.d/
        - /etc/localtime:/etc/localtime:ro
     dns:
       - 127.0.0.1
@@ -45,11 +39,8 @@ services:
     container_name: homeassistant
     image: homeassistant/raspberrypi3-homeassistant
     volumes:
-      - $PWD/homeassistant:/config
+      - $HOME/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
-    network_mode: host
+    ports:
+      - 8123:8123
     restart: always
-
-networks:
-  vpn-network:
-    external: true
