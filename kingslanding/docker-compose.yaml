@@ -45,7 +45,3 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
-
-networks:
-  vpn-network:
-    external: true
