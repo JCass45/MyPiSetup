@@ -7,10 +7,10 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      - TZ=Europe/Dublin
     volumes:
       - $HOME/storage/nzbget/config:/config
       - $HOME/storage/nzbget/downloads:/downloads
-      - /etc/localtime:/etc/localtime:ro
     ports:
       - 6789:6789
     restart: unless-stopped
@@ -23,12 +23,12 @@ services:
       - PUID=1000
       - PGID=1000
       - VERSION=docker
+      - TZ=Europe/Dublin
     volumes:
       - $HOME/storage/plex/config:/config
-      - $HOME/storage/plex/tvshows:/tvshows
-      - $HOME/storage/plex/movies:/movies
+      - $HOME/storage/media/tv:/tvshows
+      - $HOME/storage/media/movies:/movies
       - $HOME/storage/plex/transcode:/transcode
-      - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
 
   radarr:
@@ -37,11 +37,26 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      - TZ=Europe/Dublin
     volumes:
       - $HOME/storage/radarr/config:/config
-      - $HOME/storage/radarr/movies:/movies
-      - $HOME/storage/radarr/downloads:/downloads
-      - /etc/localtime:/etc/localtime:ro
+      - $HOME/storage/media/movies:/movies
+      - $HOME/storage/nzbget/downloads:/downloads
     ports:
       - 7878:7878
+    restart: unless-stopped
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Dublin
+    volumes:
+      - $HOME/storage/sonarr/config:/config
+      - $HOME/storage/media/tv:/tv
+      - $HOME/storage/nzbget/downloads:/downloads
+    ports:
+      - 8989:8989
     restart: unless-stopped
