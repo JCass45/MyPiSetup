@@ -42,3 +42,11 @@ if [ ! $(command -v docker-compose) ]; then
 else
     echo "Docker-Compose already installed"
 fi
+
+echo "Restarting pi in..."
+for count in 5 4 3 2 1; do
+    echo $var
+    sleep 1
+done
+
+sudo reboot now
