@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vagrant.plugins = ["vagrant-docker-compose", "vagrant-disksize"]
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.hostname = "millennium-falcon"
+
+  config.disksize.size = '50GB'
+
+  config.vm.network "public_network", bridge: "en0: Ethernet", mac: "080027B6BF51"
+  config.vm.network "forwarded_port", guest: 8081, host: 8081
+  config.vm.network "forwarded_port", guest: 8082, host: 8082
+  config.vm.network "forwarded_port", guest: 8083, host: 8083
+  config.vm.network "forwarded_port", guest: 8084, host: 8084
+
+  config.vm.provider "virtualbox" do |vb|
+    # Customize the amount of memory on the VM:
+    vb.memory = "4096"
+    vb.customize ["modifyvm", :id, "--usb", "on"]
+    vb.customize ["modifyvm", :id, "--usbehci", "on"]
+    vb.customize ["modifyvm", :id, "--usbxhci", "on"]
+    vb.customize ['usbfilter', 'add', '0', '--target', :id, '--name', 'storage', '--vendorid', '0x152d', '--productid', '0x1561']
+  end
+
+  config.vm.provision :shell, inline: "mkdir -p /home/vagrant/storage"
+  config.vm.provision :shell, inline: "mount --uuid 4d0642fe-d764-4263-8167-709cfd55a207 -o rw /home/vagrant/storage"
+  config.vm.provision :docker
+  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yaml", rebuild: true, run: "always"
+end

@@ -10,8 +10,8 @@ services:
       - UMASK=002
       - TZ=Europe/Dublin
     volumes:
-      - $HOME/storage/config/nzbget:/config
-      - $HOME/storage/usenet:/data/usenet
+      - /home/vagrant/storage/config/nzbget:/config
+      - /home/vagrant/storage/usenet:/data/usenet
     ports:
       - 8081:6789
     restart: unless-stopped
@@ -28,8 +28,8 @@ services:
     ports:
       - 8082:32400
     volumes:
-      - $HOME/storage/config/plex:/config
-      - $HOME/storage/media:/data/media
+      - /home/vagrant/storage/config/plex:/config
+      - /home/vagrant/storage/media:/data/media
     restart: unless-stopped
 
   radarr:
@@ -41,8 +41,8 @@ services:
       - UMASK=002
       - TZ=Europe/Dublin
     volumes:
-      - $HOME/storage/config/radarr:/config
-      - $HOME/storage:/data
+      - /home/vagrant/storage/config/radarr:/config
+      - /home/vagrant/storage:/data
     ports:
       - 8083:7878
     restart: unless-stopped
@@ -56,8 +56,8 @@ services:
       - UMASK=002
       - TZ=Europe/Dublin
     volumes:
-      - $HOME/storage/config/sonarr:/config
-      - $HOME/storage:/data
+      - /home/vagrant/storage/config/sonarr:/config
+      - /home/vagrant/storage:/data
     ports:
-      - 8083:8989
+      - 8084:8989
     restart: unless-stopped
