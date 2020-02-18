@@ -14,6 +14,8 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8083, host: 8083
   config.vm.network "forwarded_port", guest: 8084, host: 8084
 
+  config.ssh.forward_agent = true
+
   config.vm.provider "virtualbox" do |vb|
     # Customize the amount of memory on the VM:
     vb.memory = "4096"
@@ -26,5 +28,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, inline: "mkdir -p /home/vagrant/storage"
   config.vm.provision :shell, inline: "mount --uuid 4d0642fe-d764-4263-8167-709cfd55a207 -o rw /home/vagrant/storage"
   config.vm.provision :docker
-  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yaml", rebuild: true, run: "always"
+  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yaml", rebuild: true
 end
