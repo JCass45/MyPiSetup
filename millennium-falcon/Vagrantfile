@@ -18,15 +18,18 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     # Customize the amount of memory on the VM:
-    vb.memory = "4096"
+    vb.memory = "3072"
     vb.customize ["modifyvm", :id, "--usb", "on"]
     vb.customize ["modifyvm", :id, "--usbehci", "on"]
     vb.customize ["modifyvm", :id, "--usbxhci", "on"]
-    vb.customize ['usbfilter', 'add', '0', '--target', :id, '--name', 'storage', '--vendorid', '0x152d', '--productid', '0x1561']
+    vb.customize ['usbfilter', 'add', '0', '--target', :id, '--name', 'STORAGE', '--vendorid', '0x0080', '--productid', '0x0578']
   end
 
   config.vm.provision :shell, inline: "mkdir -p /home/vagrant/storage"
-  config.vm.provision :shell, inline: "mount --uuid 4d0642fe-d764-4263-8167-709cfd55a207 -o rw /home/vagrant/storage"
+  config.vm.provision :shell, inline: "sudo mount --uuid c9becf2f-5e58-4413-a7bc-15e88c4147bf -o defaults -t ext4 /home/vagrant/storage"
+  # config.vm.provision :shell, inline: "echo \"UUID=e1699679-7fab-43df-8de0-cb8e602b83c4 /home/vagrant/storage ext4 defaults 0 1\" > /etc/fstab && sudo mount -a"
+  config.vm.provision :shell, inline: "chown -R vagrant:vagrant /home/vagrant/storage"
   config.vm.provision :docker
-  config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yaml", rebuild: true
+  config.vm.provision :docker_compose
+  config.vm.provision :shell, inline: "docker-compose up -d -f /vagrant/docker-compose.yaml --force-recreate"
 end

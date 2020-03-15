@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+VAGRANT_COMMAND = ARGV[0]
+
+Vagrant.configure("2") do |config|
+  config.vagrant.plugins = ["vagrant-docker-compose", "vagrant-disksize"]
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.hostname = "evergreen-terrace"
+  config.disksize.size = '50GB'
+  config.vm.network "public_network", bridge: "en0: Ethernet", mac: "080027B6BF52"
+  config.vm.network "forwarded_port", guest: 25565, host: 25565
+  config.ssh.forward_agent = true
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "3072"
+  end
+  config.vm.provision :docker
+  config.vm.provision :shell, path: "./scripts/provision/create-user.sh"
+  config.vm.provision :shell, path: "./scripts/provision/setup-ssh.sh"
+  if VAGRANT_COMMAND == "ssh"
+    config.ssh.username = 'jack'
+  end
+end
